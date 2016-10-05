@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url] [![Dependency status][dependency-image]][dependency-url]
 
 * Студент: [Andrey Mozolev](https://up.htmlacademy.ru/javascript/7/user/125911).
-* Наставник: `Неизвестно`.
+* Наставник: [Игорь Алексеенко].
 
 ---
 
