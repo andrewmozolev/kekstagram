@@ -83,21 +83,6 @@
       // Очистка изображения.
       this._ctx.clearRect(0, 0, this._container.width, this._container.height);
 
-      // Параметры линии.
-      // NB! Такие параметры сохраняются на время всего процесса отрисовки
-      // canvas'a поэтому важно вовремя поменять их, если нужно начать отрисовку
-      // чего-либо с другой обводкой.
-
-      // Толщина линии.
-      this._ctx.lineWidth = 6;
-      // Цвет обводки.
-      this._ctx.strokeStyle = '#ffe753';
-      // Размер штрихов. Первый элемент массива задает длину штриха, второй
-      // расстояние между соседними штрихами.
-      this._ctx.setLineDash([15, 10]);
-      // Смещение первого штриха от начала линии.
-      this._ctx.lineDashOffset = 7;
-
       // Сохранение состояния канваса.
       this._ctx.save();
 
@@ -113,14 +98,6 @@
 
       var beginCrop = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
       var sideCrop = this._resizeConstraint.side - this._ctx.lineWidth / 2;
-
-      // Отрисовка прямоугольника, обозначающего область изображения после
-      // кадрирования. Координаты задаются от центра.
-      this._ctx.strokeRect(
-          beginCrop,
-          beginCrop,
-          sideCrop,
-          sideCrop);
 
       // Отрисовка внешнего прямоугольника, который нужно закрасть.
       this._ctx.beginPath();
@@ -145,7 +122,58 @@
       this._ctx.fillStyle = '#fff';
       this._ctx.font = '20px serif';
       this._ctx.textAlign = 'center';
-      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth * 2);
+      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, beginCrop - 10);
+
+      /**
+       * Отрисовка линии кружков.
+       * @param  {object} ctx    Контекст.
+       * @param  {number} step   Шаг.
+       * @param  {number} size   Размер круга.
+       * @param  {number} xBegin Начальная координата x.
+       * @param  {number} yBegin Начальная координата y.
+       * @param  {number} xEnd   Конечная координата x.
+       * @param  {number} yEnd   Конечная координата y.
+       */
+      function drawCircleLine(ctx, step, size, xBegin, yBegin, xEnd, yEnd) {
+        var x = xBegin;
+        var y = yBegin;
+
+        if (yBegin === yEnd) {
+          while (x < xEnd) {
+            drawCircle(ctx, x, y, size);
+            x += step;
+          }
+        }
+
+        if (xBegin === xEnd) {
+          while (y < yEnd) {
+            drawCircle(ctx, x, y, size);
+            y += step;
+          }
+        }
+      }
+
+      /**
+       * Отрисовка круга в заданном канвасе, с заданными параметрами.
+       * @param  {object} ctx  Контекст.
+       * @param  {number} x    Координата круга x.
+       * @param  {number} y    Координата круга y.
+       * @param  {number} size Размер круга.
+       */
+      function drawCircle(ctx, x, y, size) {
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Установка координат в начало Crop
+      this._ctx.translate(beginCrop, beginCrop);
+      this._ctx.fillStyle = '#ffe753';
+      drawCircleLine(this._ctx, 18, 4, 0, 0, sideCrop, 0);
+      drawCircleLine(this._ctx, 18, 4, sideCrop, 0, sideCrop, sideCrop);
+      drawCircleLine(this._ctx, 18, 4, 0, sideCrop, sideCrop, sideCrop);
+      drawCircleLine(this._ctx, 18, 4, 0, 0, 0, sideCrop);
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
