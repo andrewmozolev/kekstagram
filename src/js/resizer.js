@@ -119,10 +119,11 @@
       this._ctx.fill('evenodd');
 
       // Отрисовка размеров изображения.
+      var offsetSize = 20;
       this._ctx.fillStyle = '#fff';
       this._ctx.font = '20px serif';
       this._ctx.textAlign = 'center';
-      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, beginCrop - 10);
+      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, beginCrop - offsetSize);
 
       /**
        * Отрисовка линии кружков.
@@ -134,24 +135,24 @@
        * @param  {number} xEnd   Конечная координата x.
        * @param  {number} yEnd   Конечная координата y.
        */
-      function drawCircleLine(ctx, step, size, xBegin, yBegin, xEnd, yEnd) {
-        var x = xBegin;
-        var y = yBegin;
+      // function drawCircleLine(ctx, step, size, xBegin, yBegin, xEnd, yEnd) {
+      //   var x = xBegin;
+      //   var y = yBegin;
 
-        if (yBegin === yEnd) {
-          while (x < xEnd) {
-            drawCircle(ctx, x, y, size);
-            x += step;
-          }
-        }
+      //   if (yBegin === yEnd) {
+      //     while (x < xEnd) {
+      //       drawCircle(ctx, x, y, size);
+      //       x += step;
+      //     }
+      //   }
 
-        if (xBegin === xEnd) {
-          while (y < yEnd) {
-            drawCircle(ctx, x, y, size);
-            y += step;
-          }
-        }
-      }
+      //   if (xBegin === xEnd) {
+      //     while (y < yEnd) {
+      //       drawCircle(ctx, x, y, size);
+      //       y += step;
+      //     }
+      //   }
+      // }
 
       /**
        * Отрисовка круга в заданном канвасе, с заданными параметрами.
@@ -160,20 +161,64 @@
        * @param  {number} y    Координата круга y.
        * @param  {number} size Размер круга.
        */
-      function drawCircle(ctx, x, y, size) {
+      // function drawCircle(ctx, x, y, size) {
+      //   ctx.beginPath();
+      //   ctx.arc(x, y, size, 0, 2 * Math.PI);
+      //   ctx.closePath();
+      //   ctx.fill();
+      // }
+
+      // Установка координат в начало Crop.
+      // this._ctx.translate(beginCrop, beginCrop);
+
+      // Установка цвета для рамки "Кружочки".
+      // this._ctx.fillStyle = '#ffe753';
+
+      // Отрисовка четырех сторона рамки "Кружочки".
+      // drawCircleLine(this._ctx, 18, 4, 0, 0, sideCrop, 0);
+      // drawCircleLine(this._ctx, 18, 4, sideCrop, 0, sideCrop, sideCrop);
+      // drawCircleLine(this._ctx, 18, 4, 0, sideCrop, sideCrop, sideCrop);
+      // drawCircleLine(this._ctx, 18, 4, 0, 0, 0, sideCrop);
+
+
+      /**
+       * Отрисовка одной стороны рамки "Зиг-Заг".
+       * @param  {object} ctx       Контекст.
+       * @param  {number} xBegin    Начальная координата x.
+       * @param  {number} yBegin    Начальная координата y.
+       * @param  {number} length    Длина стороны.
+       * @param  {string} direction Направление стороны.
+       * @param  {boolean} various  Нужен ли отступ для стороны.
+       */
+      function drawZigzagFrame(ctx, xBegin, yBegin, length, direction, various) {
+        var step = length / 40;
+        var x = xBegin;
+        var y = yBegin;
+        var offset = various ? step : 0;
         ctx.beginPath();
-        ctx.arc(x, y, size, 0, 2 * Math.PI);
-        ctx.closePath();
-        ctx.fill();
+        for (var i = 0 - step, j = offset; i <= length + step; i += step, j = j === 0 ? step : 0) {
+          if (direction === 'horisontal') {
+            ctx.lineTo(x + i, y - j + offset);
+          }
+          if (direction === 'vertical') {
+            ctx.lineTo(x + j - offset, y + i);
+          }
+        }
+        ctx.stroke();
       }
 
-      // Установка координат в начало Crop
-      this._ctx.translate(beginCrop, beginCrop);
-      this._ctx.fillStyle = '#ffe753';
-      drawCircleLine(this._ctx, 18, 4, 0, 0, sideCrop, 0);
-      drawCircleLine(this._ctx, 18, 4, sideCrop, 0, sideCrop, sideCrop);
-      drawCircleLine(this._ctx, 18, 4, 0, sideCrop, sideCrop, sideCrop);
-      drawCircleLine(this._ctx, 18, 4, 0, 0, 0, sideCrop);
+      // Установка цвета для рамки "Зиг-Заг".
+      this._ctx.strokeStyle = '#ffe753';
+
+      // Установка ширины рамки "Зиг-Заг".
+      this._ctx.lineWidth = 4;
+
+      // Отрисовка четырех сторона рамки "Зиг-Заг".
+      drawZigzagFrame(this._ctx, 0, 0, sideCrop, 'horisontal', false);
+      drawZigzagFrame(this._ctx, sideCrop, 0, sideCrop, 'vertical', false);
+      drawZigzagFrame(this._ctx, 0, sideCrop, sideCrop, 'horisontal', true);
+      drawZigzagFrame(this._ctx, 0, 0, sideCrop, 'vertical', true);
+
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
