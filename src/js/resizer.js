@@ -169,7 +169,7 @@
       // }
 
       // Установка координат в начало Crop.
-      // this._ctx.translate(beginCrop, beginCrop);
+      this._ctx.translate(beginCrop, beginCrop);
 
       // Установка цвета для рамки "Кружочки".
       // this._ctx.fillStyle = '#ffe753';
