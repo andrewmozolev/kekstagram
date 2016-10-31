@@ -36,6 +36,11 @@
   var filterMap;
 
   /**
+   * Записываем значения куки фильтра.
+   */
+  var cookieFilterValue = window.Cookies.get('upload-filter');
+
+  /**
    * Объект, который занимается кадрированием изображения.
    * @type {Resizer}
    */
@@ -234,6 +239,12 @@
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
     }
+    //  Если есть значение куки фильтра, применяем его к изображению.
+    if (cookieFilterValue) {
+      var selectedFilterElement = document.getElementById('upload-filter-' + cookieFilterValue);
+      selectedFilterElement.checked = true;
+      filterImage.className = 'filter-image-preview filter-' + cookieFilterValue;
+    }
   };
 
   /**
@@ -282,6 +293,20 @@
     var selectedFilter = [].filter.call(filterForm['upload-filter'], function(item) {
       return item.checked;
     })[0].value;
+
+    // Подчет даты cookie
+    var now = new Date();
+    var birthdayGrace = new Date(now.getFullYear(), 11, 9);
+
+    if (now - birthdayGrace < 0) {
+      birthdayGrace.setFullYear(now.getFullYear() - 1);
+    }
+    var differenceDate = now - birthdayGrace;
+
+    var daysAfterLastBirthdayGrace = Math.floor(differenceDate / (1000 * 60 * 60 * 24));
+
+    // Добавляем куки выбранного фильтра.
+    window.Cookies.set('upload-filter', selectedFilter, {expires: daysAfterLastBirthdayGrace});
 
     // Класс перезаписывается, а не обновляется через classList потому что нужно
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
