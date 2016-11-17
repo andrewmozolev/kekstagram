@@ -3,7 +3,7 @@
 (function() {
 
   var load = require('./load');
-  var getPictureElement = require('./picture');
+  var Picture = require('./picture');
   var gallery = require('./gallery');
 
   var URL_PICTURES = 'http://localhost:1507/api/pictures';
@@ -15,7 +15,8 @@
 
   var renderPhotos = function(photosArray) {
     photosArray.forEach(function(photo, index) {
-      container.appendChild(getPictureElement(photo, index));
+      var picture = new Picture(photo, index);
+      container.appendChild(picture.element);
     });
     gallery.setPictures(photosArray);
   };

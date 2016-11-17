@@ -7,7 +7,8 @@ var IMAGE_LOAD_TIMEOUT = 10000;
 var template = document.getElementById('picture-template');
 var templateContainer = 'content' in template ? template.content : template;
 
-module.exports = function(picture, index) {
+
+var getPictureElement = function(picture) {
   var pictureImageTimeout = null;
   var pictureElement = templateContainer.querySelector('.picture').cloneNode(true);
 
@@ -32,10 +33,31 @@ module.exports = function(picture, index) {
     pictureElement.classList.add('picture-load-failure');
   }, IMAGE_LOAD_TIMEOUT);
 
-  pictureElement.addEventListener('click', function(evt) {
-    evt.preventDefault();
-    gallery.show(index);
-  });
-
   return pictureElement;
 };
+
+module.exports = function(data, index) {
+  this.data = data;
+  this.index = index;
+  this.element = getPictureElement(this.data);
+
+  var self = this;
+
+  this.element.onclick = function(evt) {
+    evt.preventDefault();
+    gallery.show(self.index);
+  };
+
+  this.remove = function() {
+    this.element.onclick = null;
+  };
+};
+
+
+
+
+
+
+
+
+
