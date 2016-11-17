@@ -1,11 +1,13 @@
 'use strict';
 
+var gallery = require('./gallery');
+
 var IMAGE_LOAD_TIMEOUT = 10000;
 
 var template = document.getElementById('picture-template');
 var templateContainer = 'content' in template ? template.content : template;
 
-module.exports = function(picture) {
+module.exports = function(picture, index) {
   var pictureImageTimeout = null;
   var pictureElement = templateContainer.querySelector('.picture').cloneNode(true);
 
@@ -29,6 +31,11 @@ module.exports = function(picture) {
   pictureImageTimeout = setTimeout(function() {
     pictureElement.classList.add('picture-load-failure');
   }, IMAGE_LOAD_TIMEOUT);
+
+  pictureElement.addEventListener('click', function(evt) {
+    evt.preventDefault();
+    gallery.show(index);
+  });
 
   return pictureElement;
 };
