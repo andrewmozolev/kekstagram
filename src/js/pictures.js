@@ -9,6 +9,7 @@
 
   var URL_PICTURES = 'http://localhost:1507/api/pictures';
   var PAGE_SIZE = 12;
+  var SCROLL_TIMEOUT_THROTTLE = 100;
 
   var currentPage = 0;
 
@@ -67,19 +68,16 @@
   };
 
 
-  var lastDate = new Date();
+
 
   var setScrollEnable = function() {
-    window.addEventListener('scroll', function() {
-      if (new Date() - lastDate >= 100) {
-        if (utils.isBottomReached()) {
-          currentPage++;
-          setPageProperties();
-          load(URL_PICTURES, pageProperties, renderPhotos);
-        }
-        lastDate = new Date();
+    window.addEventListener('scroll', utils.throttle(function() {
+      if (utils.isBottomReached()) {
+        currentPage++;
+        setPageProperties();
+        load(URL_PICTURES, pageProperties, renderPhotos);
       }
-    });
+    }, SCROLL_TIMEOUT_THROTTLE));
   };
 
   recurciveLoadPictures();
