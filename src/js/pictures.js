@@ -16,7 +16,7 @@
   var pageProperties = {
     from: currentPage * PAGE_SIZE,
     to: currentPage * PAGE_SIZE + PAGE_SIZE,
-    filter: 'filter-popular'
+    filter: localStorage.filterName || 'filter-popular'
   };
 
   var setPageProperties = function() {
@@ -50,10 +50,12 @@
   };
 
   var sefFilterEnabled = function() {
+    filters.querySelector('#' + pageProperties.filter).checked = true;
     filters.addEventListener('change', function(evt) {
       if (evt.target.classList.contains('filters-radio')) {
         var filterName = evt.target.id;
         updatePhotos(filterName);
+        localStorage.setItem('filterName', filterName);
       }
     }, true);
   };
