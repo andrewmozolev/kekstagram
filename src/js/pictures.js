@@ -12,6 +12,7 @@
   var SCROLL_TIMEOUT_THROTTLE = 100;
 
   var currentPage = 0;
+  var allPhotos = [];
 
   var pageProperties = {
     from: currentPage * PAGE_SIZE,
@@ -29,13 +30,14 @@
 
   filters.classList.add('hidden');
 
-
   var renderPhotos = function(photosArray) {
     photosArray.forEach(function(photo, index) {
-      var picture = new Picture(photo, index);
+      var picture = new Picture(photo, index + pageProperties.from);
       container.appendChild(picture.element);
     });
-    gallery.setPictures(photosArray);
+
+    allPhotos = allPhotos.concat(photosArray);
+    gallery.setPictures(allPhotos);
   };
 
   var recurciveLoadPictures = function() {
@@ -60,17 +62,14 @@
     }, true);
   };
 
-
   var updatePhotos = function(filter) {
     container.innerHTML = '';
     currentPage = 0;
     pageProperties.filter = filter;
+    allPhotos = [];
     setPageProperties();
     recurciveLoadPictures();
   };
-
-
-
 
   var setScrollEnable = function() {
     window.addEventListener('scroll', utils.throttle(function() {
