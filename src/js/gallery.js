@@ -9,6 +9,9 @@ var comments = gallery.querySelector('.comments-count');
 var Gallery = function(pictures) {
   this.pictures = pictures;
   this.activePicture = 0;
+
+  this.onElementClick = this.onElementClick.bind(this);
+  this.onCloseClick = this.onCloseClick.bind(this);
 };
 
 Gallery.prototype.setPictures = function(pictures) {
@@ -18,25 +21,17 @@ Gallery.prototype.setPictures = function(pictures) {
 Gallery.prototype.show = function(val) {
   gallery.classList.remove('invisible');
   this.setActivePicture(val);
+
   // add events
-  var self = this;
-
-  galleryImage.onclick = function() {
-    self.onElementClick();
-  };
-
-  galleryClose.onclick = function(evt) {
-    if (evt.target === galleryClose) {
-      self.hide();
-    }
-  };
+  galleryImage.addEventListener('click', this.onElementClick);
+  galleryClose.addEventListener('click', this.onCloseClick);
 };
 
 Gallery.prototype.hide = function() {
   gallery.classList.add('invisible');
   // remove events
-  galleryImage.onclick = null;
-  galleryClose.onclick = null;
+  galleryImage.removeEventListener('click', this.onElementClick);
+  galleryClose.removeEventListener('click', this.onCloseClick);
 };
 
 Gallery.prototype.setActivePicture = function(val) {
@@ -47,8 +42,10 @@ Gallery.prototype.setActivePicture = function(val) {
   comments.textContent = pic.comments;
 };
 
-Gallery.prototype.onCloseClick = function() {
-  this.hide();
+Gallery.prototype.onCloseClick = function(evt) {
+  if (evt.target === galleryClose) {
+    this.hide();
+  }
 };
 
 Gallery.prototype.onElementClick = function() {

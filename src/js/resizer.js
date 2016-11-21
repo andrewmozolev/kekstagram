@@ -125,61 +125,8 @@
       this._ctx.textAlign = 'center';
       this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, beginCrop - offsetSize);
 
-      /**
-       * Отрисовка линии кружков.
-       * @param  {object} ctx    Контекст.
-       * @param  {number} step   Шаг.
-       * @param  {number} size   Размер круга.
-       * @param  {number} xBegin Начальная координата x.
-       * @param  {number} yBegin Начальная координата y.
-       * @param  {number} xEnd   Конечная координата x.
-       * @param  {number} yEnd   Конечная координата y.
-       */
-      // function drawCircleLine(ctx, step, size, xBegin, yBegin, xEnd, yEnd) {
-      //   var x = xBegin;
-      //   var y = yBegin;
-
-      //   if (yBegin === yEnd) {
-      //     while (x < xEnd) {
-      //       drawCircle(ctx, x, y, size);
-      //       x += step;
-      //     }
-      //   }
-
-      //   if (xBegin === xEnd) {
-      //     while (y < yEnd) {
-      //       drawCircle(ctx, x, y, size);
-      //       y += step;
-      //     }
-      //   }
-      // }
-
-      /**
-       * Отрисовка круга в заданном канвасе, с заданными параметрами.
-       * @param  {object} ctx  Контекст.
-       * @param  {number} x    Координата круга x.
-       * @param  {number} y    Координата круга y.
-       * @param  {number} size Размер круга.
-       */
-      // function drawCircle(ctx, x, y, size) {
-      //   ctx.beginPath();
-      //   ctx.arc(x, y, size, 0, 2 * Math.PI);
-      //   ctx.closePath();
-      //   ctx.fill();
-      // }
-
       // Установка координат в начало Crop.
       this._ctx.translate(beginCrop, beginCrop);
-
-      // Установка цвета для рамки "Кружочки".
-      // this._ctx.fillStyle = '#ffe753';
-
-      // Отрисовка четырех сторона рамки "Кружочки".
-      // drawCircleLine(this._ctx, 18, 4, 0, 0, sideCrop, 0);
-      // drawCircleLine(this._ctx, 18, 4, sideCrop, 0, sideCrop, sideCrop);
-      // drawCircleLine(this._ctx, 18, 4, 0, sideCrop, sideCrop, sideCrop);
-      // drawCircleLine(this._ctx, 18, 4, 0, 0, 0, sideCrop);
-
 
       /**
        * Отрисовка одной стороны рамки "Зиг-Заг".
