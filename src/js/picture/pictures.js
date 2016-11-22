@@ -4,6 +4,7 @@
 
   var load = require('./../load');
   var Picture = require('./picture');
+  var DataComponent = require('./data-component');
   var gallery = require('./../gallery');
   var utils = require('./../utils');
 
@@ -33,12 +34,12 @@
 
   var renderPhotos = function(photosArray) {
     photosArray.forEach(function(photo, index) {
-      var picture = new Picture(photo, container, index + pageProperties.from);
+      var dataPhoto = new DataComponent(photo);
+      var picture = new Picture(dataPhoto, container, index + pageProperties.from);
       picture.add();
       renderedPictures.push(picture);
+      dataPhotos.push(dataPhoto);
     });
-
-    dataPhotos = dataPhotos.concat(photosArray);
     gallery.setPictures(dataPhotos);
   };
 
