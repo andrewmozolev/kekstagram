@@ -6,9 +6,10 @@ var galleryImage = gallery.querySelector('.gallery-overlay-image');
 var likes = gallery.querySelector('.likes-count');
 var comments = gallery.querySelector('.comments-count');
 
-var Gallery = function(pictures) {
-  this.pictures = pictures;
-  this.activePicture = 0;
+var Gallery = function() {
+  this.pictures = [];
+  this.activeNumber = 0;
+  this.activePicture = null;
 
   this.onElementClick = this.onElementClick.bind(this);
   this.onCloseClick = this.onCloseClick.bind(this);
@@ -21,6 +22,7 @@ Gallery.prototype.setPictures = function(pictures) {
 
 Gallery.prototype.show = function(index) {
   gallery.classList.remove('invisible');
+  this.activePicture = this.pictures[index];
   this.setActivePicture(index);
   this.setLike(this.pictures[index]);
 
@@ -40,11 +42,10 @@ Gallery.prototype.hide = function() {
 };
 
 Gallery.prototype.setActivePicture = function(index) {
-  var currentPicture = this.pictures[index];
-  this.activePicture = index;
-  galleryImage.src = currentPicture.getPhotoPreview() || currentPicture.getPhotoUrl();
-  likes.textContent = currentPicture.getLikes();
-  comments.textContent = currentPicture.getComments();
+  this.activeNumber = index;
+  galleryImage.src = this.activePicture.getPhotoPreview() || this.activePicture.getPhotoUrl();
+  likes.textContent = this.activePicture.getLikes();
+  comments.textContent = this.activePicture.getComments();
 };
 
 Gallery.prototype.onCloseClick = function(evt) {
@@ -54,26 +55,23 @@ Gallery.prototype.onCloseClick = function(evt) {
 };
 
 Gallery.prototype.onElementClick = function() {
-  if (this.activePicture === this.pictures.length - 1) {
-    this.activePicture = 0;
+  if (this.activeNumber === this.pictures.length - 1) {
+    this.activeNumber = 0;
   } else {
-    this.activePicture += 1;
+    this.activeNumber += 1;
   }
-  this.setActivePicture(this.activePicture);
+  this.setActivePicture(this.activeNumber);
+  this.setLike(this.activePicture);
 };
 
 Gallery.prototype.onLikeClick = function() {
-  var currentPicture = this.pictures[this.activePicture];
-  var isLike = !currentPicture.like;
-  currentPicture.setLikesCount(isLike);
-  currentPicture.like = isLike;
-  likes.textContent = currentPicture.getLikes();
-  this.setLike(currentPicture);
+  this.activePicture.setLikesCount();
+  likes.textContent = this.activePicture.getLikes();
+  this.setLike(this.activePicture);
 };
 
 Gallery.prototype.setLike = function(picture) {
-  var isLike = picture.like;
-  if (isLike) {
+  if (picture.isLiked()) {
     likes.classList.add('likes-count-liked');
   } else {
     likes.classList.remove('likes-count-liked');
