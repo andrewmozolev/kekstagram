@@ -2,17 +2,18 @@
 
 (function() {
 
-  var load = require('./load');
+  var load = require('./../load');
   var Picture = require('./picture');
-  var gallery = require('./gallery');
-  var utils = require('./utils');
+  var gallery = require('./../gallery');
+  var utils = require('./../utils');
 
   var URL_PICTURES = 'http://localhost:1507/api/pictures';
   var PAGE_SIZE = 12;
   var SCROLL_TIMEOUT_THROTTLE = 100;
 
   var currentPage = 0;
-  var allPhotos = [];
+  var dataPhotos = [];
+  var renderedPictures = [];
 
   var pageProperties = {
     from: currentPage * PAGE_SIZE,
@@ -32,12 +33,13 @@
 
   var renderPhotos = function(photosArray) {
     photosArray.forEach(function(photo, index) {
-      var picture = new Picture(photo, index + pageProperties.from);
-      container.appendChild(picture.element);
+      var picture = new Picture(photo, container, index + pageProperties.from);
+      picture.add();
+      renderedPictures.push(picture);
     });
 
-    allPhotos = allPhotos.concat(photosArray);
-    gallery.setPictures(allPhotos);
+    dataPhotos = dataPhotos.concat(photosArray);
+    gallery.setPictures(dataPhotos);
   };
 
   var recurciveLoadPictures = function() {
@@ -63,10 +65,13 @@
   };
 
   var updatePhotos = function(filter) {
-    container.innerHTML = '';
+    renderedPictures.forEach(function(item) {
+      item.remove();
+    });
+    renderedPictures = [];
+    dataPhotos = [];
     currentPage = 0;
     pageProperties.filter = filter;
-    allPhotos = [];
     setPageProperties();
     recurciveLoadPictures();
   };
