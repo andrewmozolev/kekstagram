@@ -10,8 +10,8 @@ var getPictureElement = function(picture) {
   var pictureImageTimeout = null;
   var pictureElement = templatePicture.cloneNode(true);
 
-  pictureElement.querySelector('.picture-comments').textContent = picture.comments;
-  pictureElement.querySelector('.picture-likes').textContent = picture.likes;
+  pictureElement.querySelector('.picture-comments').textContent = picture.getComments();
+  pictureElement.querySelector('.picture-likes').textContent = picture.getLikes();
 
   var pictureImage = new Image();
   var image = pictureElement.querySelector('img');
@@ -27,7 +27,7 @@ var getPictureElement = function(picture) {
     pictureElement.classList.add('picture-load-failure');
   });
 
-  pictureImage.src = picture.preview || picture.url;
+  pictureImage.src = picture.getPhotoPreview() || picture.getPhotoUrl();
 
   pictureImageTimeout = setTimeout(function() {
     pictureElement.classList.add('picture-load-failure');
