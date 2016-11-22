@@ -3,6 +3,12 @@
 var footerElement = document.querySelector('footer');
 
 module.exports = {
+  inherit: function(ChildComponent, BaseComponent) {
+    var EmptyConstructor = function() {};
+    EmptyConstructor.prototype = BaseComponent.prototype;
+    ChildComponent.prototype = new EmptyConstructor();
+  },
+
   isBottomReached: function() {
     var GAP = 100;
     var footerPosition = footerElement.getBoundingClientRect();
