@@ -24,7 +24,7 @@ utils.inherit(Picture, BaseComponent);
 
 Picture.prototype.showPicture = function(evt) {
   evt.preventDefault();
-  gallery.show(this.index);
+  gallery.updateHash(this.index);
 };
 
 Picture.prototype.updateLikes = function() {
